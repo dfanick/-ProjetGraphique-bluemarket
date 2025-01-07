@@ -1,16 +1,17 @@
-import { pgTable, serial, text, integer, timestamp } from 'drizzle-orm/pg-core';
 
-export const user = pgTable('user', {
-	id: text('id').primaryKey(),
-	age: integer('age'),
-	username: text('username').notNull().unique(),
-	passwordHash: text('password_hash').notNull()
-});
+import { query } from './index.js'; 
 
-export const session = pgTable('session', {
-	id: text('id').primaryKey(),
-	userId: text('user_id')
-		.notNull()
-		.references(() => user.id),
-	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
-});
+export const addressQueries = {
+  getTwo: 'SELECT * FROM address LIMIT 2', 
+};
+
+
+export async function getTwoAddresses() {
+  try {
+    const res = await query(addressQueries.getTwo); 
+    return res; 
+  } catch (err) {
+    console.error('Erreur lors de la récupération des deux adresses :', err);
+    throw err; 
+  }
+}

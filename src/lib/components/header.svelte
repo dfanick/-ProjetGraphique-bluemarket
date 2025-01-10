@@ -1,9 +1,5 @@
 <script>
-	let isOpen = false;
-
-	function toggleMenu() {
-		isOpen = !isOpen;
-	}
+	// Aucun script nécessaire si tu veux afficher le menu directement en mobile
 </script>
 
 <style>
@@ -49,24 +45,23 @@
 		text-decoration: none;
 	}
 
+	/* Mobile menu */
 	@media (max-width: 768px) {
 		.nav-links {
-			display: none;
-			flex-direction: column;
+			display: flex; /* Affiche le menu directement sur mobile */
+			flex-direction: column; /* Aligne les éléments en colonne */
 			position: absolute;
-			top: 60px;
+			top: 100px; /* Positionne le menu sous le logo */
 			right: 0;
-			background-color:  #003366;
+			background-color: #003366;
 			width: 100%;
 			text-align: center;
-		}
-
-		.nav-links.open {
-			display: flex;
+			padding: 1rem 0;
+			gap: 1rem; /* Ajoute un espace entre les éléments */
 		}
 
 		.burger {
-			display: flex;
+			display: none; /* Masque l'icône burger sur mobile */
 		}
 	}
 </style>
@@ -74,15 +69,15 @@
 <header>
 	<img src="/logobm.png" alt="BlueMarket Logo" class="logo" />
 	<div class="menu">
-		<button class="burger" on:click={toggleMenu} on:keydown={(e) => e.key === 'Enter' && toggleMenu()} aria-label="Toggle menu">
+		<button class="burger" aria-label="Toggle menu" style="display:none;">
 			<div></div>
 			<div></div>
 			<div></div>
 		</button>
-		<nav class={`nav-links ${isOpen ? 'open' : ''}`}>
-			<a href="#home">Home</a>
-			<a href="#about">About</a>
-			<a href="#services">Services</a>
+		<nav class="nav-links">
+			<a href="/nosservices">Nos services</a>
+			<!-- <a href="https://youtu.be/LLfHZywisa4">A propos</a> -->
+			<a href="#performance">Performance</a>
 			<a href="#contact">Contact</a>
 		</nav>
 	</div>

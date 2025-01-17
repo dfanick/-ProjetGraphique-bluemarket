@@ -5,7 +5,7 @@ export async function GET() {
   try {
     console.log('Requête GET reçue pour récupérer dix coproducts');
     
-    const coproducts = await getTenCoproducts(); 
+    const coproducts = await getTenCoproducts(); // Appel à la fonction qui récupère 10 coproducts depuis la DB
     console.log('Coproducts récupérés :', coproducts);
     
     return new Response(JSON.stringify(coproducts), {

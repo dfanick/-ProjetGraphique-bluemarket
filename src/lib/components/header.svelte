@@ -77,8 +77,8 @@
 		<nav class="nav-links">
 			<a href="/nosservices">Nos services</a>
 			<!-- <a href="https://youtu.be/LLfHZywisa4">A propos</a> -->
-			<a href="#performance">Performance</a>
-			<a href="#contact">Contact</a>
+			<a href="/meilleurvente">Tableau de bord</a>
+			<a href="/contact">Contact</a>
 		</nav>
 	</div>
 </header>

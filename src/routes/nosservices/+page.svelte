@@ -91,13 +91,6 @@
 		text-align: center;
 	}
 
-	/* Icône de service */
-	.icone-service {
-		width: 80px;
-		height: 80px;
-		margin-bottom: 1rem;
-	}
-
 	/* Titre et description */
 	.service h3 {
 		font-size: 1.5rem;
@@ -109,20 +102,6 @@
 		font-size: 1rem;
 		color: #666;
 		margin-bottom: 1rem;
-	}
-
-	/* Lien */
-	.lien-service {
-		color: white;
-		background-color: #007BFF;
-		padding: 0.5rem 1rem;
-		text-decoration: none;
-		border-radius: 5px;
-		transition: background-color 0.3s;
-	}
-
-	.lien-service:hover {
-		background-color: #0056b3;
 	}
 
 	/* Liste sous forme de points pour le service réemploi industriel */

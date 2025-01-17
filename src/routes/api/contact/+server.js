@@ -13,7 +13,7 @@ export async function POST({ request }) {
     console.log('Formulaire reçu:', { name, email, message });
 
     return json({ success: true }, { status: 200 });
-  } catch (e) {
+  } catch {
     return json({ error: 'Erreur interne du serveur.' }, { status: 500 });
   }
 }

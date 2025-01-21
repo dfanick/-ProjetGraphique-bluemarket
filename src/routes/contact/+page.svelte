@@ -70,7 +70,7 @@
 </div>
 
 <style>
-/* Le style reste inchangé */
+
 .conteneur-formulaire {
 	max-width: 450px;
 	margin: 5rem auto;
@@ -152,7 +152,7 @@ button:hover {
 	background: #003366;
 }
 
-/* Design Responsive */
+
 @media (max-width: 768px) {
 	.conteneur-formulaire {
 		margin: 10rem auto 2rem;

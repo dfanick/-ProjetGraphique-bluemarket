@@ -1,5 +1,5 @@
 <script>
-	// Aucun script nécessaire si tu veux afficher le menu directement en mobile
+	
 </script>
 
 <style>
@@ -45,23 +45,23 @@
 		text-decoration: none;
 	}
 
-	/* Mobile menu */
+
 	@media (max-width: 768px) {
 		.nav-links {
-			display: flex; /* Affiche le menu directement sur mobile */
-			flex-direction: column; /* Aligne les éléments en colonne */
+			display: flex;
+			flex-direction: column; 
 			position: absolute;
-			top: 100px; /* Positionne le menu sous le logo */
+			top: 100px; 
 			right: 0;
 			background-color: #003366;
 			width: 100%;
 			text-align: center;
 			padding: 1rem 0;
-			gap: 1rem; /* Ajoute un espace entre les éléments */
+			gap: 1rem; 
 		}
 
 		.burger {
-			display: none; /* Masque l'icône burger sur mobile */
+			display: none; 
 		}
 	}
 </style>
@@ -76,8 +76,7 @@
 		</button>
 		<nav class="nav-links">
 			<a href="/nosservices">Nos services</a>
-			<!-- <a href="https://youtu.be/LLfHZywisa4">A propos</a> -->
-			<a href="/meilleurvente">Tableau de bord</a>
+			<a href="/tableaudebord">Tableau de bord</a>
 			<a href="/contact">Contact</a>
 		</nav>
 	</div>

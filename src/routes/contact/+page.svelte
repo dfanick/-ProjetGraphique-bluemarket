@@ -23,6 +23,11 @@
 				numero = '';
 				message = '';
 				erreur = '';
+
+				// Réinitialiser le message de succès après 3 secondes
+				setTimeout(() => {
+					succes = false;
+				}, 3000); // 3000 ms = 3 secondes
 			} else {
 				const response = await res.json();
 				erreur = response.erreur || 'Une erreur est survenue.';
@@ -68,6 +73,9 @@
 		<button type="submit">Envoyer</button>
 	</form>
 </div>
+
+
+
 
 <style>
 

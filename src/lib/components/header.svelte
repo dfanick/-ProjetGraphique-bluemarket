@@ -1,6 +1,23 @@
-<script>
-	
-</script>
+
+
+<header>
+	<a href="/" aria-label="Accueil">
+		<img src="/logobm.png" alt="Bluemarket Logo" class="logo" />
+	</a>
+	<div class="menu">
+		<button class="burger" aria-label="Toggle menu" style="display:none;">
+			<div></div>
+			<div></div>
+			<div></div>
+		</button>
+		<nav class="nav-links">
+			<a href="/nosservices">Nos services</a>
+			<a href="/tableaudebord">Tableau de bord</a>
+			<a href="/contact">Contact</a>
+		</nav>
+	</div>
+</header>
+
 
 <style>
 	header {
@@ -47,37 +64,26 @@
 
 
 	@media (max-width: 768px) {
-		.nav-links {
-			display: flex;
-			flex-direction: column; 
-			position: absolute;
-			top: 100px; 
-			right: 0;
-			background-color: #003366;
-			width: 100%;
-			text-align: center;
-			padding: 1rem 0;
-			gap: 1rem; 
-		}
-
-		.burger {
-			display: none; 
-		}
+	.nav-links {
+		display: flex;
+		flex-direction: column; 
+		position: absolute;
+		top: 120px; 
+		right: 2%; 
+		left: 2%; 
+		background-color: #003366;
+		text-align: center;
+		padding: 1rem 0;
+		gap: 1rem; 
+		
 	}
+	
+
+	
+	.burger {
+		display: none; 
+	}
+}
+
 </style>
 
-<header>
-	<img src="/logobm.png" alt="BlueMarket Logo" class="logo" />
-	<div class="menu">
-		<button class="burger" aria-label="Toggle menu" style="display:none;">
-			<div></div>
-			<div></div>
-			<div></div>
-		</button>
-		<nav class="nav-links">
-			<a href="/nosservices">Nos services</a>
-			<a href="/tableaudebord">Tableau de bord</a>
-			<a href="/contact">Contact</a>
-		</nav>
-	</div>
-</header>

@@ -1,104 +1,121 @@
 import { hash, verify } from '@node-rs/argon2';
-import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
-import * as auth from '$lib/server/auth';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
+import { query } from '$lib/server/db/index'; 
+import * as auth from '$lib/server/auth'; 
 
 export const load = async (event) => {
-	if (event.locals.user) {
-		return redirect(302, '/demo/lucia');
-	}
-	return {};
+  
+  if (event.locals.user) {
+    throw redirect(302, '/');
+  }
+  return {};
 };
 
 export const actions = {
-	login: async (event) => {
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
+  
+  login: async (event) => {
+    try {
+      const formData = await event.request.formData();
+      const username = formData.get('username');
+      const password = formData.get('password');
 
-		if (!validateUsername(username)) {
-			return fail(400, { message: 'Invalid username' });
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password' });
-		}
+      
+      if (!validateUsername(username)) {
+        return fail(400, {
+          message: 'Le format du nom d\'utilisateur est invalide.',
+        });
+      }
+      if (!validatePassword(password)) {
+        return fail(400, {
+          message: 'Le mot de passe doit comporter entre 6 et 255 caractères.',
+        });
+      }
 
-		const results = await db.select().from(table.user).where(eq(table.user.username, username));
+     
+      const result = await query('SELECT * FROM auth_users WHERE username = $1', [username]);
+      const existingUser = result.rows[0];
+      if (!existingUser) {
+        return fail(400, { message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
+      }
 
-		const existingUser = results.at(0);
-		if (!existingUser) {
-			return fail(400, { message: 'Incorrect username or password' });
-		}
+ 
+      const validPassword = await verify(existingUser.passwordhash, password);
+      if (!validPassword) {
+        return fail(400, { message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
+      }
 
-		const validPassword = await verify(existingUser.passwordHash, password, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
-		if (!validPassword) {
-			return fail(400, { message: 'Incorrect username or password' });
-		}
+    
+      const sessionToken = auth.generateSessionToken();
+      const session = await auth.createSession(sessionToken, existingUser.id);
+      auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
 
-		const sessionToken = auth.generateSessionToken();
-		const session = await auth.createSession(sessionToken, existingUser.id);
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+      
+      throw redirect(302, '/');
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+      return fail(500, { message: 'Une erreur imprévu est survenue pendant la connexion.' });
+    }
+  },
 
-		return redirect(302, '/demo/lucia');
-	},
-	register: async (event) => {
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
+  /** Inscription */
+  register: async (event) => {
+    try {
+      const formData = await event.request.formData();
+      const username = formData.get('username');
+      const password = formData.get('password');
 
-		if (!validateUsername(username)) {
-			return fail(400, { message: 'Invalid username' });
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password' });
-		}
+      // Validation des entrées utilisateur
+      if (!validateUsername(username)) {
+        return fail(400, {
+          message: 'Le format du nom d\'utilisateur est invalide.',
+        });
+      }
+      if (!validatePassword(password)) {
+        return fail(400, {
+          message: 'Le mot de passe doit comporter entre 6 et 255 caractères.',
+        });
+      }
 
-		const userId = generateUserId();
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
+      // Hachage du mot de passe
+      const passwordHash = await hash(password, {
+        memoryCost: 19456,
+        timeCost: 2,
+        outputLen: 32,
+        parallelism: 1,
+      });
 
-		try {
-			await db.insert(table.user).values({ id: userId, username, passwordHash });
+      // Insérer un nouvel utilisateur dans la base de données
+      const result = await query(
+        'INSERT INTO auth_users (username, passwordhash) VALUES ($1, $2) RETURNING id',
+        [username, passwordHash]
+      );
 
-			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, userId);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-		} catch (e) {
-			return fail(500, { message: 'An error has occurred' });
-		}
-		return redirect(302, '/demo/lucia');
-	}
+      // Création de la session pour l'utilisateur inscrit
+      const userId = result.rows[0].id;
+      const sessionToken = auth.generateSessionToken();
+      const session = await auth.createSession(sessionToken, userId);
+      auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
+
+      // Redirection vers la page d'accueil après une inscription réussie
+      throw redirect(302, '/');
+    } catch (error) {
+      console.error('Erreur d\'inscription:', error);
+      return fail(500, { message: 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.' });
+    }
+  },
 };
 
-function generateUserId() {
-	// ID with 120 bits of entropy, or about the same as UUID v4.
-	const bytes = crypto.getRandomValues(new Uint8Array(15));
-	const id = encodeBase32LowerCase(bytes);
-	return id;
-}
-
+// Validation du nom d'utilisateur
 function validateUsername(username) {
-	return (
-		typeof username === 'string' &&
-		username.length >= 3 &&
-		username.length <= 31 &&
-		/^[a-z0-9_-]+$/.test(username)
-	);
+  return (
+    typeof username === 'string' &&
+    username.length >= 3 &&
+    username.length <= 31 &&
+    /^[a-z0-9_-]+$/.test(username)
+  );
 }
 
+// Validation du mot de passe
 function validatePassword(password) {
-	return typeof password === 'string' && password.length >= 6 && password.length <= 255;
+  return typeof password === 'string' && password.length >= 6 && password.length <= 255;
 }

@@ -1,3 +1,4 @@
+// src/hooks.server.js
 import * as auth from '$lib/server/auth.js';
 
 const handleAuth = async ({ event, resolve }) => {
@@ -10,7 +11,7 @@ const handleAuth = async ({ event, resolve }) => {
 
 	const { session, user } = await auth.validateSessionToken(sessionToken);
 	if (session) {
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+		auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
 	} else {
 		auth.deleteSessionTokenCookie(event);
 	}
@@ -22,3 +23,4 @@ const handleAuth = async ({ event, resolve }) => {
 };
 
 export const handle = handleAuth;
+

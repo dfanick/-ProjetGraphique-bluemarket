@@ -27,7 +27,7 @@
  	}
   }
  
-
+  
 export function getIframeURLs() {
 	return [
 		// 7les produits les plus vendues avec un filtres de periode
@@ -51,68 +51,56 @@ export function getIframeURLs() {
 		//3les vendeurs ayant généré le plus de revenus avec filtres de periode
 		"http://localhost:3000/public/question/2cd0b2b1-88f4-4b83-99e9-1e0a5ef87e90", 
 		
-		//Les 10 catégories avec le plus de produits associés
+		//8Les 10 catégories avec le plus de produits associés
 		"http://localhost:3000/public/question/47c93039-1bc1-4b24-842b-09516293e1fd",
   ];
 }
 
 
-// Fonction de validation des champs
 function validateName(name) {
-  return name && name.length >= 2;
-}
-
-function validateEmail(email) {
-  return email && email.includes('@') && email.includes('.');
-}
-
-function validatePhoneNumber(phone) {
-  return phone ? phone.length === 10 && !isNaN(phone) : true; // Si pas de numéro, validation ok
-}
-
-function validateMessage(message) {
-  return message && message.length >= 10;
-}
-
-export const contactQueries = {
-  insertContact: `
-    INSERT INTO contact_form (nom, prenom, courriel, numero, message) 
-    VALUES ($1, $2, $3, $4, $5)
-  `,
-};
-
-// Fonction qui valide les données et les insère dans la BD
-export async function insertContactForm(nom, prenom, courriel, numero, message) {
-  if (!nom || !prenom || !courriel || !message) {
-    throw new Error('Tous les champs sont requis.');
-  }
-
-  if (!validateName(nom)) {
-    throw new Error('Le nom est invalide.');
-  }
-
-  if (!validateName(prenom)) {
-    throw new Error('Le prénom est invalide.');
-  }
-
-  if (!validateEmail(courriel)) {
-    throw new Error('L\'email est invalide.');
-  }
-
-  if (!validatePhoneNumber(numero)) {
-    throw new Error('Le numéro de téléphone est invalide.');
-  }
-
-  if (!validateMessage(message)) {
-    throw new Error('Le message doit contenir au moins 10 caractères.');
-  }
-
-  // Insertion des données si tout est valide
-  try {
-    const res = await query(contactQueries.insertContact, [nom, prenom, courriel, numero, message]);
-    return { success: true, result: res };
-  } catch (err) {
-    console.error('Erreur lors de l\'insertion dans la base de données :', err);
-    throw new Error('Erreur interne du serveur.');
-  }
-}
+	if (!name || name.length < 2) {
+	  throw new Error('Le nom ou prénom doit contenir au moins 2 caractères.');
+	}
+ }
+ 
+ function validateEmail(email) {
+	if (!email || !email.includes('@') || !email.includes('.')) {
+	  throw new Error('L\'adresse email est invalide.');
+	}
+ }
+ 
+ function validatePhoneNumber(phone) {
+	if (phone && (phone.length !== 10 || isNaN(phone))) {
+	  throw new Error('Le numéro de téléphone est invalide (10 chiffres requis).');
+	}
+ }
+ 
+ function validateMessage(message) {
+	if (!message || message.length < 10) {
+	  throw new Error('Le message doit contenir au moins 10 caractères.');
+	}
+ }
+ 
+ export const contactQueries = {
+	insertContact: `
+	  INSERT INTO contact_form (nom, prenom, courriel, numero, message) 
+	  VALUES ($1, $2, $3, $4, $5)
+	`,
+ };
+ 
+ export async function insertContactForm(nom, prenom, courriel, numero, message) {
+	try {
+	  validateName(nom);
+	  validateName(prenom);
+	  validateEmail(courriel);
+	  validatePhoneNumber(numero);
+	  validateMessage(message);
+ 
+	  const res = await query(contactQueries.insertContact, [nom, prenom, courriel, numero, message]);
+	  return { success: true, result: res };
+	} catch (err) {
+	  console.error('Erreur lors de l\'insertion :', err);
+	  throw new Error(err.message); // On renvoie un message clair
+	}
+ }
+ 

@@ -1,7 +1,7 @@
 <section class="nos-services">
 	<h2>Nos Services</h2>
 	<div class="conteneur-services">
-		<!-- Service réemploi industriel -->
+		
 		<div class="service">
 			
 			<h3>Réemploi Industriel</h3>
@@ -14,7 +14,7 @@
 		
 		</div>
 
-		<!-- Autres services déjà existants -->
+		
 		<div class="service">
 			
 			<h3>Connect</h3>
@@ -57,7 +57,7 @@
 </section>
 
 <style>
-	/* Section globale */
+	
 	.nos-services {
 		padding: 2rem;
 		background-color: #f9f9f9;
@@ -70,7 +70,7 @@
 		font-size: 2rem;
 	}
 
-	/* Conteneur des services */
+	
 	.conteneur-services {
 		display: flex;
 		justify-content: space-between;
@@ -78,20 +78,20 @@
 		gap: 1.5rem;
 	}
 
-	/* Style de chaque service */
+	
 	.service {
 		background-color: white;
 		padding: 1.5rem;
 		border-radius: 8px;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-		flex: 1 1 calc(33.333% - 1rem); /* 3 colonnes */
+		flex: 1 1 calc(33.333% - 1rem); 
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
 	}
 
-	/* Titre et description */
+	
 	.service h3 {
 		font-size: 1.5rem;
 		margin-bottom: 0.5rem;
@@ -104,14 +104,12 @@
 		margin-bottom: 1rem;
 	}
 
-	/* Liste sous forme de points pour le service réemploi industriel */
+	
 	.service ul {
 		list-style-type: disc;
 		padding-left: 1.5rem;
 		text-align: left;
 	}
-
-	/* Responsive : Affichage en une colonne sur mobile */
 	@media (max-width: 768px) {
 		.conteneur-services {
 			flex-direction: column;

@@ -1,8 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
+import { query } from './db/index';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
@@ -20,54 +18,46 @@ export function generateSessionToken() {
  */
 export async function createSession(token, userId) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const session = {
-		id: sessionId,
-		userId,
-		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
-	};
-	await db.insert(table.session).values(session);
-	return session;
+	const sessionExpiresAt = new Date(Date.now() + DAY_IN_MS * 30);
+	await query(
+		'INSERT INTO auth_sessions (userid, session_token, session_expires_at) VALUES ($1, $2, $3)',
+		[userId, sessionId, sessionExpiresAt]
+	);
+	return { token, sessionExpiresAt };
 }
 
 /** @param {string} token */
 export async function validateSessionToken(token) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const [result] = await db
-		.select({
-			// Adjust user table here to tweak returned data
-			user: { id: table.user.id, username: table.user.username },
-			session: table.session
-		})
-		.from(table.session)
-		.innerJoin(table.user, eq(table.session.userId, table.user.id))
-		.where(eq(table.session.id, sessionId));
+	const result = await query('SELECT * FROM auth_sessions WHERE session_token = $1', [sessionId]);
+	const session = result.rows[0];
 
-	if (!result) {
+	if (!session) {
 		return { session: null, user: null };
 	}
-	const { session, user } = result;
 
-	const sessionExpired = Date.now() >= session.expiresAt.getTime();
+	const sessionExpired = Date.now() >= new Date(session.session_expires_at).getTime();
 	if (sessionExpired) {
-		await db.delete(table.session).where(eq(table.session.id, session.id));
+		await query('DELETE FROM auth_sessions WHERE session_token = $1', [sessionId]);
 		return { session: null, user: null };
 	}
 
-	const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
+	const renewSession = Date.now() >= new Date(session.session_expires_at).getTime() - DAY_IN_MS * 15;
 	if (renewSession) {
-		session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
-		await db
-			.update(table.session)
-			.set({ expiresAt: session.expiresAt })
-			.where(eq(table.session.id, session.id));
+		const newExpiresAt = new Date(Date.now() + DAY_IN_MS * 30);
+		await query('UPDATE auth_sessions SET session_expires_at = $1 WHERE session_token = $2', [newExpiresAt, sessionId]);
+		session.session_expires_at = newExpiresAt;
 	}
+
+	const userResult = await query('SELECT id, username FROM auth_users WHERE id = $1', [session.userid]);
+	const user = userResult.rows[0];
 
 	return { session, user };
 }
 
 /** @param {string} sessionId */
 export async function invalidateSession(sessionId) {
-	await db.delete(table.session).where(eq(table.session.id, sessionId));
+	await query('DELETE FROM auth_sessions WHERE session_token = $1', [sessionId]);
 }
 
 /**

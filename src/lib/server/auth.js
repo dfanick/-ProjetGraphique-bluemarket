@@ -30,7 +30,7 @@ export async function createSession(token, userId) {
 export async function validateSessionToken(token) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const result = await query('SELECT * FROM auth_sessions WHERE session_token = $1', [sessionId]);
-	const session = result.rows[0];
+	const session = result[0];
 
 	if (!session) {
 		return { session: null, user: null };
@@ -50,7 +50,7 @@ export async function validateSessionToken(token) {
 	}
 
 	const userResult = await query('SELECT id, username FROM auth_users WHERE id = $1', [session.userid]);
-	const user = userResult.rows[0];
+	const user = userResult[0];
 
 	return { session, user };
 }

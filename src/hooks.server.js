@@ -1,4 +1,4 @@
-// src/hooks.server.js
+
 import * as auth from '$lib/server/auth.js';
 
 const handleAuth = async ({ event, resolve }) => {

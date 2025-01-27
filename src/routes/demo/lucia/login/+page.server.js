@@ -12,100 +12,89 @@ export const load = async (event) => {
 };
 
 export const actions = {
-  
-  login: async (event) => {
-    try {
-      const formData = await event.request.formData();
-      const username = formData.get('username');
-      const password = formData.get('password');
+	login: async (event) => {
+		 // Récupération des données du formulaire
+		 const formData = await event.request.formData();
+		 const username = formData.get('username');
+		 const password = formData.get('password');
 
-      
-      if (!validateUsername(username)) {
-        return fail(400, {
-          message: 'Le format du nom d\'utilisateur est invalide.',
-        });
-      }
-      if (!validatePassword(password)) {
-        return fail(400, {
-          message: 'Le mot de passe doit comporter entre 6 et 255 caractères.',
-        });
-      }
+		 // Validation des champs
+		 if (!validateUsername(username)) {
+			  return fail(400, {
+					message: "Le format du nom d'utilisateur est invalide."
+			  });
+		 }
+		 if (!validatePassword(password)) {
+			  return fail(400, {
+					message: 'Le mot de passe doit comporter entre 6 et 255 caractères.'
+			  });
+		 }
 
-     
-      const result = await query('SELECT * FROM auth_users WHERE username = $1', [username]);
-      const existingUser = result.rows[0];
-      if (!existingUser) {
-        return fail(400, { message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
-      }
+		 // Vérification de l'utilisateur dans la base de données
+		 const result = await query('SELECT * FROM auth_users WHERE username = $1', [username]);
+		 const existingUser = result[0];
 
- 
-      const validPassword = await verify(existingUser.passwordhash, password);
-      if (!validPassword) {
-        return fail(400, { message: 'Nom d\'utilisateur ou mot de passe incorrect.' });
-      }
+		 // Si l'utilisateur n'existe pas, retournez un message d'erreur
+		 if (!existingUser) {
+			  return fail(400, { message: "Nom d'utilisateur ou mot de passe incorrect." });
+		 }
+		 console.log('Stored password hash:', existingUser.passwordhash);
 
-    
-      const sessionToken = auth.generateSessionToken();
-      const session = await auth.createSession(sessionToken, existingUser.id);
-      auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
+		 // Vérification du mot de passe
+		 const validPassword = await verify(password, existingUser.passwordhas);
+		 if (!validPassword) {
+			  return fail(400, { message: "Nom d'utilisateur ou mot de passe incorrect." });
+		 }
 
-      
-      throw redirect(302, '/');
-    } catch (error) {
-      console.error('Erreur de connexion:', error);
-      return fail(500, { message: 'Une erreur imprévu est survenue pendant la connexion.' });
-    }
-  },
+		 // Générer un token de session
+		 const sessionToken = auth.generateSessionToken();
+		 const session = await auth.createSession(sessionToken, existingUser.id);
 
-  /** Inscription */
-  register: async (event) => {
-    try {
-      const formData = await event.request.formData();
-      const username = formData.get('username');
-      const password = formData.get('password');
+		 // Sauvegarder le cookie de session
+		 auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
 
-      // Validation des entrées utilisateur
-      if (!validateUsername(username)) {
-        return fail(400, {
-          message: 'Le format du nom d\'utilisateur est invalide.',
-        });
-      }
-      if (!validatePassword(password)) {
-        return fail(400, {
-          message: 'Le mot de passe doit comporter entre 6 et 255 caractères.',
-        });
-      }
+		 // Redirection vers la page d'accueil après la connexion
+		 return redirect(302, '/tableaudebord');
+	},
 
-      // Hachage du mot de passe
-      const passwordHash = await hash(password, {
-        memoryCost: 19456,
-        timeCost: 2,
-        outputLen: 32,
-        parallelism: 1,
-      });
+	register: async (event) => {
+		const formData = await event.request.formData();
+		const username = formData.get('username');
+		const password = formData.get('password');
 
-      // Insérer un nouvel utilisateur dans la base de données
-      const result = await query(
-        'INSERT INTO auth_users (username, passwordhash) VALUES ($1, $2) RETURNING id',
-        [username, passwordHash]
-      );
+		if (!validateUsername(username)) {
+			return fail(400, {
+				message: "Le format du nom d'utilisateur est invalide."
+			});
+		}
+		if (!validatePassword(password)) {
+			return fail(400, {
+				message: 'Le mot de passe doit comporter entre 6 et 255 caractères.'
+			});
+		}
 
-      // Création de la session pour l'utilisateur inscrit
-      const userId = result.rows[0].id;
-      const sessionToken = auth.generateSessionToken();
-      const session = await auth.createSession(sessionToken, userId);
-      auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
+		const passwordHash = await hash(password, {
+			memoryCost: 19456,
+			timeCost: 2,
+			outputLen: 32,
+			parallelism: 1
+		});
 
-      // Redirection vers la page d'accueil après une inscription réussie
-      throw redirect(302, '/');
-    } catch (error) {
-      console.error('Erreur d\'inscription:', error);
-      return fail(500, { message: 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.' });
-    }
-  },
+		const result = await query(
+			'INSERT INTO auth_users (username, passwordhash) VALUES ($1, $2) RETURNING id',
+			[username, passwordHash]
+		);
+
+		const userId = result[0].id;
+		const sessionToken = auth.generateSessionToken();
+		const session = await auth.createSession(sessionToken, userId);
+		auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
+
+		return redirect(302, '/');
+	}
 };
 
-// Validation du nom d'utilisateur
+
 function validateUsername(username) {
   return (
     typeof username === 'string' &&

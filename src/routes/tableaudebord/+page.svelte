@@ -1,16 +1,20 @@
 <script>
 	import { onMount } from 'svelte';
 	import Iframecomposant from '$lib/components/iframecomposant.svelte';
+	import { goto } from '$app/navigation';
 
 	let iframeURLs = [];
 	let error = '';
-// 
+
 	onMount(async () => {
 		try {
 			const res = await fetch('/api/iframe');
 			if (res.ok) {
 				const data = await res.json();
 				iframeURLs = data.iframeURLs;
+			} else if (res.status === 401) {
+				// Redirection si non authentifié
+				goto('/demo/lucia/login');
 			} else {
 				error = `Erreur ${res.status}: ${await res.text()}`;
 			}
@@ -22,6 +26,16 @@
 </script>
 
 <section>
+
+
+<h1>Bienvenue sur votre tableau de bord !</h1>
+<h2>Voyons vos accomplissements pour offrir une nouvelle vie aux équipements !</h2>
+	
+	<!-- Formulaire de déconnexion -->
+	<form method="post" action="/demo/lucia/?/logout">
+		<button type="submit">Se déconnecter</button>
+	</form>
+
 	{#if error}
 		<p class="error">{error}</p>
 	{/if}
@@ -39,6 +53,7 @@
 		<p class="loading">Chargement des tableaux de bord...</p>
 	{/if}
 </section>
+
 
 <style>
 

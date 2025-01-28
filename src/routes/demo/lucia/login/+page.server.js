@@ -12,13 +12,13 @@ export const load = async (event) => {
 };
 
 export const actions = {
+
 	login: async (event) => {
-		 // Récupération des données du formulaire
+		 
 		 const formData = await event.request.formData();
 		 const username = formData.get('username');
 		 const password = formData.get('password');
-
-		 // Validation des champs
+		
 		 if (!validateUsername(username)) {
 			  return fail(400, {
 					message: "Le format du nom d'utilisateur est invalide."
@@ -30,30 +30,27 @@ export const actions = {
 			  });
 		 }
 
-		 // Vérification de l'utilisateur dans la base de données
+
+		
 		 const result = await query('SELECT * FROM auth_users WHERE username = $1', [username]);
 		 const existingUser = result[0];
 
-		 // Si l'utilisateur n'existe pas, retournez un message d'erreur
+		 console.log(existingUser)
 		 if (!existingUser) {
 			  return fail(400, { message: "Nom d'utilisateur ou mot de passe incorrect." });
 		 }
 		 console.log('Stored password hash:', existingUser.passwordhash);
 
-		 // Vérification du mot de passe
-		 const validPassword = await verify(password, existingUser.passwordhas);
+		 const validPassword = await verify(existingUser.passwordhash, password );
 		 if (!validPassword) {
 			  return fail(400, { message: "Nom d'utilisateur ou mot de passe incorrect." });
 		 }
 
-		 // Générer un token de session
 		 const sessionToken = auth.generateSessionToken();
 		 const session = await auth.createSession(sessionToken, existingUser.id);
 
-		 // Sauvegarder le cookie de session
 		 auth.setSessionTokenCookie(event, sessionToken, session.sessionExpiresAt);
 
-		 // Redirection vers la page d'accueil après la connexion
 		 return redirect(302, '/tableaudebord');
 	},
 

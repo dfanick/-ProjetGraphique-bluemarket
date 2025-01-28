@@ -12,6 +12,7 @@ export function generateSessionToken() {
 	return token;
 }
 
+
 /**
  * @param {string} token
  * @param {string} userId

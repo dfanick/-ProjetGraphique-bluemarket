@@ -1,4 +1,4 @@
-<!-- src/routes/demo/lucia/page.svelte -->
+
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';

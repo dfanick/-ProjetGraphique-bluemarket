@@ -26,15 +26,15 @@
 </script>
 
 <section>
-
-
-<h1>Bienvenue sur votre tableau de bord !</h1>
-<h2>Voyons vos accomplissements pour offrir une nouvelle vie aux équipements !</h2>
-	
-	<!-- Formulaire de déconnexion -->
-	<form method="post" action="/demo/lucia/?/logout">
-		<button type="submit">Se déconnecter</button>
-	</form>
+	<div class="header-container">
+		<div class="title-container">
+			<h1>Bienvenue sur votre tableau de bord !</h1>
+			<h2>Voyons vos accomplissements pour offrir une nouvelle vie aux équipements !</h2>
+		</div>
+		<form method="post" action="/demo/lucia/?/logout">
+			<button type="submit">Se déconnecter</button>
+		</form>
+	</div>
 
 	{#if error}
 		<p class="error">{error}</p>
@@ -54,70 +54,111 @@
 	{/if}
 </section>
 
-
 <style>
+section {
+	margin-top: 60px;
+	padding: 0 20px;
+}
 
+@media (max-width: 768px) {
 	section {
-		margin-top: 60px;
-		padding: 0 20px;
+		margin-top: 170px;
 	}
+}
 
-	@media (max-width: 768px) {
-		section {
-			margin-top: 170px;
-		}
+/* Conteneur des titres + bouton de déconnexion */
+.header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+	.header-container {
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+		margin-bottom: 15px; /* Descendre légèrement les titres */
 	}
+}
 
+/* Titres centrés */
+.title-container {
+	text-align: center;
+	flex-grow: 1;
+}
+
+/* Bouton de déconnexion */
+form {
+	margin-left: auto;
+}
+
+form button {
+	background-color: rgb(7, 10, 77);
+	color: white;
+	font-size: 1rem;
+	font-weight: bold;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background 0.3s ease;
+}
+
+form button:hover {
+	background-color: #179fe8;
+}
+
+/* Grid des iframes */
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr); 
+	gap: 20px;
+}
+
+@media (max-width: 768px) {
 	.grid-container {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr); 
-		gap: 20px;
+		grid-template-columns: 1fr; 
 	}
+}
 
-	@media (max-width: 768px) {
-		.grid-container {
-			grid-template-columns: 1fr; 
-		}
-	}
+.iframe-container {
+	border: 1px solid #e0e0e0;
+	border-radius: 10px;
+	padding: 15px;
+	background-color: #ffffff;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s, box-shadow 0.2s;
+}
 
-	
-	.iframe-container {
-		border: 1px solid #e0e0e0;
-		border-radius: 10px;
-		padding: 15px;
-		background-color: #ffffff;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		transition: transform 0.2s, box-shadow 0.2s;
-	}
+.iframe-container:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-	.iframe-container:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-	}
+h2 {
+	font-size: 1.2rem;
+	color: #333333;
+	margin-bottom: 10px;
+}
 
-	
-	h2 {
-		font-size: 1.2rem;
-		color: #333333;
-		margin-bottom: 10px;
-	}
+.error {
+	color: #d32f2f;
+	font-size: 1rem;
+	font-weight: bold;
+	text-align: center;
+	padding: 10px;
+	background-color: #ffebee;
+	border: 1px solid #f44336;
+	border-radius: 8px;
+}
 
-	
-	.error {
-		color: #d32f2f;
-		font-size: 1rem;
-		font-weight: bold;
-		text-align: center;
-		padding: 10px;
-		background-color: #ffebee;
-		border: 1px solid #f44336;
-		border-radius: 8px;
-	}
+.loading {
+	font-size: 1rem;
+	color: #666666;
+	text-align: center;
+}
 
-	
-	.loading {
-		font-size: 1rem;
-		color: #666666;
-		text-align: center;
-	}
 </style>

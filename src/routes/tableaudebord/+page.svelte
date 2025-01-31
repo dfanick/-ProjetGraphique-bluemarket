@@ -1,3 +1,9 @@
+<!-- 
+ Récupère dynamiquement les URLs des iframes
+ via server/iframe.js et les affiche.
+Utilise iframecomposant.svelte pour intégrer 
+les tableaux de bord.
+-->
 <script>
 	import { onMount } from 'svelte';
 	import Iframecomposant from '$lib/components/iframecomposant.svelte';
@@ -13,7 +19,7 @@
 				const data = await res.json();
 				iframeURLs = data.iframeURLs;
 			} else if (res.status === 401) {
-				// Redirection si non authentifié
+			
 				goto('/demo/lucia/login');
 			} else {
 				error = `Erreur ${res.status}: ${await res.text()}`;
@@ -66,7 +72,7 @@ section {
 	}
 }
 
-/* Conteneur des titres + bouton de déconnexion */
+
 .header-container {
 	display: flex;
 	justify-content: space-between;
@@ -80,17 +86,16 @@ section {
 		flex-direction: column;
 		align-items: center;
 		gap: 15px;
-		margin-bottom: 15px; /* Descendre légèrement les titres */
+		margin-bottom: 15px; 
 	}
 }
 
-/* Titres centrés */
+
 .title-container {
 	text-align: center;
 	flex-grow: 1;
 }
 
-/* Bouton de déconnexion */
 form {
 	margin-left: auto;
 }
@@ -111,7 +116,6 @@ form button:hover {
 	background-color: #179fe8;
 }
 
-/* Grid des iframes */
 .grid-container {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr); 

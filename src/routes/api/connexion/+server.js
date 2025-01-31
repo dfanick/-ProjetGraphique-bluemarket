@@ -1,4 +1,4 @@
-// src/routes/api/login/+server.js
+
 import { json } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth.js';
 import { db } from '$lib/server/db';
@@ -6,7 +6,7 @@ import { db } from '$lib/server/db';
 export async function POST({ request, cookies }) {
 	const { username, password } = await request.json();
 
-	// Vérifiez les informations d'identification ici
+	
 	const result = await db.query('SELECT * FROM users_sessions WHERE username = $1 AND password = $2', [username, password]);
 	const user = result.rows[0];
 

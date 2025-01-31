@@ -1,4 +1,10 @@
 
+//Ce fichier gère la connexion à PostgreSQL 
+//et fournit une fonction query pour 
+//exécuter des requêtes SQL.
+//Il sera utilisé par schema.js pour insérer
+//des données et exécuter des requêtes.
+
 import pg from 'pg';
 import { env } from '$env/dynamic/private'; 
 
@@ -17,7 +23,7 @@ export const query = async (text, params) => {
   }
 };
 
-// Test de la connexion à la base de données
+
 async function testConnection() {
   try {
     const res = await pool.query('SELECT NOW()');
@@ -27,4 +33,4 @@ async function testConnection() {
   }
 }
 
-testConnection(); // Testez la connexion au démarrage
+testConnection(); 

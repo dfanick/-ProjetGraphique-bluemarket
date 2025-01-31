@@ -1,14 +1,18 @@
+//API qui vérifie l’authentification de l’utilisateur
+// et renvoie les URLs des tableaux de bord.
+//Utilise getIframeURLs de schema.js pour récupérer ces URLs.
+
 import { json } from '@sveltejs/kit';
 import { getIframeURLs } from '$lib/server/db/schema.js';
 
 export async function GET(event) {
     try {
-        // Vérifie si l'utilisateur est connecté
+		  //exemple de log existant pour se connecter dans env.
         if (!event.locals.user) {
             return json({ error: 'Utilisateur non authentifié.' }, { status: 401 });
         }
 
-        // Récupère les URLs des tableaux de bord
+       
         const iframeURLs = getIframeURLs();
         if (!Array.isArray(iframeURLs) || iframeURLs.some((url) => typeof url !== 'string')) {
             throw new Error('Les URLs des iframes sont invalides.');

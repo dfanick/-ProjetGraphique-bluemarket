@@ -10,6 +10,10 @@
 	{#if form?.message}
 	  <p class="message-erreur">{form.message}</p>
 	{/if}
+	{#if form?.success}
+  <p class="message-succes">{form.success}</p>
+{/if}
+
 	
 	<form method="post" action="?/login" use:enhance>
 	  <div class="groupe-formulaire">
@@ -32,22 +36,22 @@
 </div>
 
 <style>
-/* Global container to handle full-page layout */
+
 .conteneur-formulaire {
     max-width: 450px;
-    margin: 10rem auto; /* Grande marge supérieure pour descendre le formulaire */
+    margin: 10rem auto; 
     background: #003366;
-    padding: 2rem; /* Augmentation du padding pour un formulaire plus grand */
+    padding: 2rem; 
     border-radius: 10px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     color: white;
     text-align: center;
     display: flex;
-    flex-direction: column; /* Assure que le contenu se développe verticalement */
-    justify-content: center; /* Centre le contenu verticalement */
-    align-items: center; /* Centre le contenu horizontalement */
-    min-height: 500px; /* Définit une hauteur minimale pour éviter que le formulaire soit trop petit */
-    flex-grow: 1; /* Permet au formulaire de prendre l'espace disponible si nécessaire */
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    min-height: 500px; 
+    flex-grow: 1; 
 }
 
 h1 {
@@ -62,12 +66,19 @@ h1 {
 	margin-top: 0.3rem;
 	text-align: left;
 }
+.message-succes {
+  color: #66ff66;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  text-align: left;
+}
+
 
 form {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	width: 100%; /* Garantit que le formulaire prend toute la largeur disponible dans son conteneur */
+	width: 100%; 
 }
 
 .groupe-formulaire {
@@ -87,7 +98,7 @@ input, button {
 	border-radius: 6px;
 	border: none;
 	padding: 0.7rem;
-	width: 80%; /* Les champs de saisie prennent toute la largeur disponible */
+	width: 80%; 
 }
 
 input {
@@ -113,10 +124,10 @@ button:hover {
 	background: #4c96df;
 }
 
-/* Responsive Styles for mobile devices */
+
 @media (max-width: 768px) {
 	.conteneur-formulaire {
-		margin: 10rem auto; /* Réduire les marges pour mobile */
+		margin: 10rem auto; 
 		padding: 1.5rem;
 		margin-top: 300px; 
 	}

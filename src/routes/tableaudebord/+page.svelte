@@ -35,7 +35,7 @@ les tableaux de bord.
 	<div class="header-container">
 		<div class="title-container">
 			<h1>Bienvenue sur votre tableau de bord !</h1>
-			<h2>Voyons vos accomplissements pour offrir une nouvelle vie aux équipements !</h2>
+			<!-- <h2>Voyons vos accomplissements pour offrir une nouvelle vie aux équipements !</h2>-->
 		</div>
 		<form method="post" action="/demo/lucia/?/logout">
 			<button type="submit">Se déconnecter</button>
@@ -50,7 +50,7 @@ les tableaux de bord.
 		<div class="grid-container">
 			{#each iframeURLs as url, i}
 				<div class="iframe-container">
-					<h2>Tableau de bord {i + 1}</h2>
+					<!-- <h2>Tableau de bord {i + 1}</h2>-->
 					<Iframecomposant src={url} title={"Metabase Dashboard ${i + 1}"} />
 				</div>
 			{/each}

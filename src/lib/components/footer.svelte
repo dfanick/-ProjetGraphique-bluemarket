@@ -5,10 +5,7 @@
 </div>
 
 <style>
-	/* Version bureau */
-/* Version bureau */
-/* Version bureau */
-/* Version bureau */
+	
 .footer {
     text-align: center;
     background-color: #003366;
@@ -21,7 +18,7 @@
     margin-top: 15px; 
 }
 
-/* Logo */
+
 .logo {
     max-width: 150px; 
     display: block;

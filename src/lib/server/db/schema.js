@@ -12,13 +12,13 @@
 
 export function getIframeURLs() {
 	return [
-		// les produits les plus vendues avec un filtres de periode
+		// les produits les plus vendus 
 		"http://localhost:3000/public/question/e0b1c9b4-f9b4-415f-8d30-cb2eba15b933",
 	
-		// les categories les plus vendus avec un filtres de periode
+		// les categories les plus vendus 
 		"http://localhost:3000/public/question/7b542c7e-21b1-44d4-9fca-8dfe1c8f487c",
 		
-		//Les produits les plus vendus, avec leur catégorie, sur une periode
+		//Les produits les plus vendus
 		"http://localhost:3000/public/question/18aac05e-926d-4a17-8065-2a4bdcc84849",
 
 		//Analyse des Ventes par Secteur d’Activité et par Catégorie de Produit
@@ -30,7 +30,7 @@ export function getIframeURLs() {
 		//Les 10 vendeurs ayant créé le plus grand nombre d'offres
 		"http://localhost:3000/public/question/bda11946-248c-42cb-ac6d-2dacf768ac3b",
 		
-		//les vendeurs ayant généré le plus de revenus avec filtres de periode
+		//les vendeurs ayant généré le plus de revenus
 		"http://localhost:3000/public/question/2cd0b2b1-88f4-4b83-99e9-1e0a5ef87e90", 
 		
 		//Les 10 catégories avec le plus de produits associés
@@ -44,7 +44,6 @@ function validateName(name) {
 	  throw new Error('Le nom ou prénom doit contenir au moins 2 caractères.');
 	}
  }
- 
  function validateEmail(email) {
 	if (!email || !email.includes('@') || !email.includes('.')) {
 	  throw new Error('L\'adresse email est invalide.');
@@ -82,7 +81,7 @@ function validateName(name) {
 	  return { success: true, result: res };
 	} catch (err) {
 	  console.error('Erreur lors de l\'insertion :', err);
-	  throw new Error(err.message); // On renvoie un message clair
+	  throw new Error(err.message); 
 	}
  }
  

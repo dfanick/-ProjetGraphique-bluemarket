@@ -12,7 +12,7 @@
 		</button>
 		<nav class="nav-links">
 			<a href="/nosservices">Nos services</a>
-			<a href="/tableaudebord">Tableau de bord</a>
+			<a href="/tableaudebord">Tableaux de bord</a>
 			<a href="/contact">Contact</a>
 		</nav>
 	</div>
@@ -60,6 +60,7 @@
 	.nav-links a {
 		color: white;
 		text-decoration: none;
+		font-size: 1rem;
 	}
 
 

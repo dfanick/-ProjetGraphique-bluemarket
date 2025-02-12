@@ -19,4 +19,5 @@ chaque URL reçue de l’API.
 	frameborder="0"
 	allowfullscreen
 	loading="lazy"
+	sandbox="allow-scripts allow-same-origin"
 ></iframe>

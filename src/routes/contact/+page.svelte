@@ -181,6 +181,8 @@
 		.conteneur-formulaire {
 			margin: 10rem auto 2rem;
 			padding: 1rem;
+			margin-top: 10rem;
+
 		}
 	
 		h1 {

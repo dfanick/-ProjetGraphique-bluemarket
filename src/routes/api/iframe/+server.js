@@ -7,7 +7,7 @@ import { getIframeURLs } from '$lib/server/db/schema.js';
 
 export async function GET(event) {
     try {
-		  //exemple de log existant pour se connecter dans env.
+		  
         if (!event.locals.user) {
             return json({ error: 'Utilisateur non authentifié.' }, { status: 401 });
         }

@@ -50,7 +50,7 @@ export const actions = {
 		const username = formData.get('username');
 		const password = formData.get('password');
 
-		
+
 		if (!validateUsername(username)) {
 			return fail(400, { message: "Le format du nom d'utilisateur est invalide." });
 		}
@@ -90,9 +90,7 @@ export const actions = {
 
 		
 		return {
-			success: "Inscription réussie ! Vous pouvez maintenant vous connecter.",
-			
-	  };
+			success: "Inscription réussie ! Vous pouvez maintenant vous connecter.",};
 	},
 };
 
